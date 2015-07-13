@@ -7,14 +7,24 @@
 
     <!-- dependencies -->
     <script src="bower_components/jquery/jquery.min.js"></script>
+    <script src="bower_components/underscore/underscore-min.js"></script>
     <!-- your scripts -->
     <script src="env/config.js"></script>
     <script src="scripts/app.js"></script>
+
   </head>
   <body>
     <div id="main">
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
+      <form class="messageForm">
+       <div class="messages">
+          <input class="messageField" type="text" value="chat here"></input>
+          <input class="submitButton" type="submit" value="send"></input>
+      </div>
+      </form>
+      <div id='messageOutput'>
+      </div>
     </div>
   </body>
 </html>
