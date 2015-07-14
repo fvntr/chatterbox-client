@@ -29,7 +29,7 @@ app.fetch = function(){
 	  contentType: 'application/jsonp', //refers to jsonp lib, switched in order to break some user input
 	  order: 'createdAt',
 	  success: function (data) { //execute on sucess
-	    console.log(data);
+	    console.log(data.results);
 	    data.results.forEach(function(message){ //iterate over messages 
 	    	var cleanText = $("<p></p>").text(message.username+ " : " + message.text + " sent at "+ message.createdAt);
 	    	$("#messageOutput").prepend(cleanText); //put messages on the message Div
@@ -43,18 +43,22 @@ app.fetch = function(){
 }
 
 
-setInterval(app.fetch(), 200); //periodically gets new messages
+setInterval(function(){app.fetch()}, 20000); //periodically gets new messages
 
-app.postMessage = function(){
-
+app.clearMessages = function (){
+	$('#messageOutput').empty();
 }
 
-$(document).ready(function(){
-	$('.submitButton').on('click', function(){
-		var message = $(".messageField").val();
-		console.log(message);
-		app.send(message) //<-- needs to send contents of form field
-		//needs to reset form
-		//needs to invoke asking for username
+$(document).ready(function(){ //initiating the DOM
+	$('.submitButton').on('click', function(){ //event check of button click
+		var message = {}; //creating object to pass into server
+		message.text = $(".messageField").val(); //defining the text of the message
+		message.username = window.location.search.slice(10); //grabbing user name from config.js (window/DOM search)
+		app.send(message) //sends contents of form field
+		
+		$('.messageField').val('chat here'); //resets the form
 	});
+	$('.clearButton').on('click', function(){
+		app.clearMessages()
+	})
 });
