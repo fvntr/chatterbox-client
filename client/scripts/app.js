@@ -19,6 +19,7 @@ app.send= function(message){
 	})
 }
 
+var rooms = {};
 
 app.fetch = function(){
 	$.ajax({
@@ -29,10 +30,13 @@ app.fetch = function(){
 	  contentType: 'application/jsonp', //refers to jsonp lib, switched in order to break some user input
 	  order: 'createdAt',
 	  success: function (data) { //execute on sucess
-	    console.log(data.results);
+	    //console.log(data.results);
 	    data.results.forEach(function(message){ //iterate over messages 
-	    	var cleanText = $("<p></p>").text(message.username+ " : " + message.text + " sent at "+ message.createdAt);
+	    	var cleanText = $("<p></p>").text(message.username+ " : " + message.text + " sent at "+ message.createdAt);	    	
 	    	$("#messageOutput").prepend(cleanText); //put messages on the message Div
+	    	if(message.roomname){
+	    		rooms[message.roomname] = message.roomname
+	    	}
 	    })
 	  },
 	  error: function (data) { //executes on failure
@@ -42,14 +46,25 @@ app.fetch = function(){
 	});
 }
 
+var chatRoomNameGenerator = function(){
+		$('.chatRooms').empty();
+	_.each(rooms, function(room){
+		if(room){
+			$('.chatRooms').append("<option class='rooms'>"+room+"</option>")
+		}
+	});
+}
 
-setInterval(function(){app.fetch()}, 20000); //periodically gets new messages
+setInterval(function(){app.fetch()}, 2000); //periodically gets new messages
+setInterval(function(){chatRoomNameGenerator()}, 2000); //periodically gets new messages
 
 app.clearMessages = function (){
 	$('#messageOutput').empty();
 }
 
 $(document).ready(function(){ //initiating the DOM
+	// app.fetch()
+	// chatRoomNameGenerator();
 	$('.submitButton').on('click', function(){ //event check of button click
 		var message = {}; //creating object to pass into server
 		message.text = $(".messageField").val(); //defining the text of the message
@@ -61,4 +76,8 @@ $(document).ready(function(){ //initiating the DOM
 	$('.clearButton').on('click', function(){
 		app.clearMessages()
 	})
+	$('.chatRooms').on('change', function(){
+		alert('You\'ve slected a new room');
+	})
 });
+
