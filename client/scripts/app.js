@@ -76,8 +76,15 @@ $(document).ready(function(){ //initiating the DOM
 	$('.clearButton').on('click', function(){
 		app.clearMessages()
 	})
-	$('.chatRooms').on('change', function(){
-		alert('You\'ve slected a new room');
+	$('.chatRooms').change(function(){
+		//clear messageOutput
+		$('#messageOutput').empty();
+		//get all messages with roomname selected
+		var thisRoom = $( ".chatRooms option:selected" ).text())
+
+		//display only messages with selected roomname
+
+		// alert('You\'ve slected a new room');
 	})
 });
 
